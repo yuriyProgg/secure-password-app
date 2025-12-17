@@ -1,0 +1,57 @@
+[package]
+name = "secure-password-app"
+version = "0.1.0"
+description = "Secure Password App"
+authors = ["Yuri Masalov <https://yuriyprogg.vercel.app>"]
+edition = "2024"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[lib]
+# The `_lib` suffix may seem redundant but it is necessary
+# to make the lib name unique and wouldn't conflict with the bin name.
+# This seems to be only an issue on Windows, see https://github.com/rust-lang/cargo/issues/8519
+name = "secure_password_app_lib"
+crate-type = ["staticlib", "cdylib", "rlib"]
+
+[build-dependencies]
+tauri-build = { version = "2", features = [] }
+
+[dependencies]
+sea-orm = { workspace = true, features = [
+    "sqlx-sqlite",
+    "runtime-tokio-rustls",
+    "macros",
+] }
+db = { path = "./db" }
+tauri = { version = "2", features = [] }
+tauri-plugin-opener = "2"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+tokio = { workspace = true, features = ["macros", "rt-multi-thread"] }
+rand = "0.9.2"
+aes-gcm = "0.10.3"
+dotenvy = { workspace = true }
+base64 = "0.22.1"
+hex = "0.4.3"
+windows = { version = "0.52", features = [
+    "Win32_Foundation",
+    "Win32_Security_Credentials",
+    "Win32_UI_Controls",
+    "Win32_Graphics_Gdi",
+    "Win32_System_Memory"
+] }
+
+[workspace]
+members = ["db", "migration"]
+
+[workspace.dependencies]
+sea-orm = { version = "2.0.0-rc", features = ["sqlx-sqlite", "runtime-tokio-rustls", "macros"] }
+async-trait = "0.1.89"
+tracing = "0.1.41"
+tracing-subscriber = "0.3.20"
+serde = { version = "1.0.228", features = ["derive"] }
+tokio = { version = "1.48.0" }
+dotenvy = "0.15.7"
+chrono = "0.4.42"
+

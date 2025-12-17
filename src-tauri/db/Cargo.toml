@@ -1,0 +1,18 @@
+[package]
+name = "db"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+sea-orm = { workspace = true, features = [
+    "sqlx-sqlite",
+    "runtime-tokio-rustls",
+    "macros",
+] }
+serde = { workspace = true, features = ["derive"] }
+async-trait = { workspace = true }
+tracing = { workspace = true }
+tracing-subscriber = { workspace = true }
+tokio = { workspace = true, features = ["macros", "rt-multi-thread"] }
+dotenvy = { workspace = true }
+chrono = { workspace = true } 
