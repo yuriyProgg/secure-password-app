@@ -1,6 +1,6 @@
 [package]
 name = "secure-password-app"
-version = "0.1.0"
+version = "1.0.0"
 description = "Secure Password App"
 authors = ["Yuri Masalov <https://yuriyprogg.vercel.app>"]
 edition = "2024"
@@ -24,6 +24,7 @@ sea-orm = { workspace = true, features = [
     "macros",
 ] }
 db = { path = "./db" }
+migration = { path = "./migration" }
 tauri = { version = "2", features = [] }
 tauri-plugin-opener = "2"
 serde = { version = "1", features = ["derive"] }
@@ -34,6 +35,9 @@ aes-gcm = "0.10.3"
 dotenvy = { workspace = true }
 base64 = "0.22.1"
 hex = "0.4.3"
+tauri-plugin-notification = "2"
+
+[target.'cfg(windows)'.dependencies]
 windows = { version = "0.52", features = [
     "Win32_Foundation",
     "Win32_Security_Credentials",

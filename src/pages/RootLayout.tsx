@@ -18,19 +18,31 @@ export const RootLayout = () => {
               <span className='navbar-toggler-icon'></span>
             </button>
             <div className='collapse navbar-collapse' id='navbarNav'>
-              <ul className='navbar-nav'>
+              <ul className='navbar-nav d-flex gap-1'>
                 <li className='nav-item'>
-                  <Link className='nav-link' to='/'>
+                  <Link
+                    className='nav-link d-flex align-items-center gap-1'
+                    to='/'
+                  >
+                    <i className='bi bi-house'></i>
                     Главная
                   </Link>
                 </li>
                 <li className='nav-item'>
-                  <Link className='nav-link' to='/list'>
+                  <Link
+                    className='nav-link d-flex align-items-center gap-1'
+                    to='/list'
+                  >
+                    <i className='bi bi-list'></i>
                     Список паролей
                   </Link>
                 </li>
                 <li className='nav-item'>
-                  <Link className='nav-link' to='/donate'>
+                  <Link
+                    className='nav-link d-flex align-items-center gap-1'
+                    to='/donate'
+                  >
+                    <i className='bi bi-heart'></i>
                     Поддержать автора
                   </Link>
                 </li>
@@ -39,7 +51,7 @@ export const RootLayout = () => {
           </div>
         </nav>
       </header>
-      <main className='container'>
+      <main className='container' style={{ minHeight: '100vh' }}>
         <Outlet />
       </main>
       <footer style={{ backgroundColor: '#f3f3f3' }} className='mt-5 p-3'>

@@ -18,8 +18,10 @@ export const DonatePage = () => {
           <Link
             to='https://t.tb.ru/c2c-qr-choose-bank-v1/+79952737153/100000000004'
             target='_blank'
-            className='btn btn-primary'
+            className='btn btn-primary d-flex align-items-center gap-1 mx-auto'
+            style={{ width: 'fit-content' }}
           >
+            <i className='bi bi-heart'></i>
             Поддержать
           </Link>
         </div>

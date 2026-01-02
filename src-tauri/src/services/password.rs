@@ -1,9 +1,9 @@
+use crate::schemas::PasswordSchema;
+use crate::services;
+use crate::services::aes::{decrypt, encrypt};
 use db::{entities::password, repositories::password::PasswordRepository};
 use rand::seq::IteratorRandom;
 use sea_orm::{ActiveValue::NotSet, Set};
-
-use crate::services;
-use crate::services::aes::{decrypt, encrypt};
 
 #[tauri::command]
 pub async fn generate_base_password() -> String {
@@ -41,24 +41,42 @@ pub async fn generate_edit_password(
 }
 
 #[tauri::command]
-pub async fn list_passwords() -> Vec<password::Model> {
+pub async fn list_passwords() -> Vec<PasswordSchema> {
     match services::auth::authenticate().await {
-        Ok(_) => {}
-        Err(_) => {
-            return Vec::new();
-        }
-    }
+        Ok(authenticated) => {
+            if !authenticated {
+                return Vec::new();
+            }
 
-    let db = db::connect().await;
-    let passwords = PasswordRepository::find_all(&db).await.unwrap();
-    db::close(db).await;
-    passwords
+            let db = db::connect().await;
+            let passwords = PasswordRepository::find_all(&db).await.unwrap();
+            db::close(db).await;
+            decrypt_passwords(passwords).await
+        }
+        Err(_) => Vec::new(),
+    }
+}
+
+pub async fn decrypt_passwords(passwords: Vec<password::Model>) -> Vec<PasswordSchema> {
+    let mut result: Vec<PasswordSchema> = Vec::new();
+    for p in passwords {
+        result.push(PasswordSchema {
+            id: p.id,
+            name: p.name,
+            password: decrypt(&p.password),
+        });
+    }
+    result
 }
 
 #[tauri::command]
 pub async fn update_name(id: i32, name: String) -> bool {
     match services::auth::authenticate().await {
-        Ok(_) => {}
+        Ok(r) => {
+            if !r {
+                return false;
+            }
+        }
         Err(_) => {
             return false;
         }
@@ -75,7 +93,11 @@ pub async fn update_name(id: i32, name: String) -> bool {
 #[tauri::command]
 pub async fn delete_password(id: i32) -> bool {
     match services::auth::authenticate().await {
-        Ok(_) => {}
+        Ok(r) => {
+            if !r {
+                return false;
+            }
+        }
         Err(_) => {
             return false;
         }
@@ -108,24 +130,4 @@ pub async fn save_password(name: String, password: String) -> bool {
     PasswordRepository::create(&db, password).await.unwrap();
     db::close(db).await;
     return true;
-}
-
-#[tauri::command]
-pub async fn get_password(id: i32) -> String {
-    // match services::auth::authenticate().await {
-    //     Ok(_) => {}
-    //     Err(_) => {
-    //         return String::new();
-    //     }
-    // }
-    // TODO: сделать проверку на авторизацию    
-
-    let db = db::connect().await;
-    let password: password::Model = PasswordRepository::find_by_id(&db, id)
-        .await
-        .unwrap()
-        .unwrap();
-    let password = decrypt(&password.password);
-    db::close(db).await;
-    return password;
 }

@@ -1,3 +1,3 @@
+pub mod aes;
 pub mod auth;
 pub mod password;
-pub mod aes;

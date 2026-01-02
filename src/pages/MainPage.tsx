@@ -1,6 +1,7 @@
 import { invoke } from '@tauri-apps/api/core'
 import { useState, useEffect } from 'react'
 import { copyToClipboard } from '../utils'
+import { sendCopiedNotification, sendSavedNotification } from '../utils/notify'
 
 type DetailSettingsType = {
   lenght: number
@@ -74,19 +75,29 @@ export const MainPage = () => {
       <div className='d-flex mt-3 mb-5 gap-3'>
         <button
           type='button'
-          className='btn btn-primary'
+          className='btn btn-primary d-flex align-items-center gap-1'
           onClick={isEdit ? generateEditPassword : generateBasePassword}
         >
+          <i className='bi bi-dice-5'></i>
           Генерировать
         </button>
         <button
           type='button'
-          className='btn btn-primary'
-          onClick={() => copyToClipboard(password)}
+          className='btn btn-primary d-flex align-items-center gap-1'
+          onClick={() => {
+            copyToClipboard(password)
+            sendCopiedNotification()
+          }}
         >
+          <i className='bi bi-clipboard-data'></i>
           Копировать
         </button>
-        <button type='submit' className='btn btn-success'>
+        <button
+          type='submit'
+          className='btn btn-success d-flex align-items-center gap-1'
+          onClick={() => sendSavedNotification()}
+        >
+          <i className='bi bi-floppy'></i>
           Сохранить
         </button>
       </div>

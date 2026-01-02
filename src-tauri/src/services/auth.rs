@@ -1,12 +1,13 @@
+#[cfg(target_os = "windows")]
 use windows::{
-    core::PCWSTR,
     // Добавляем BOOL в импорты
-    Win32::Foundation::{ERROR_SUCCESS, HWND, BOOL},
+    Win32::Foundation::{BOOL, ERROR_SUCCESS, HWND},
     Win32::Graphics::Gdi::HBITMAP,
     Win32::Security::Credentials::{
-        CredUIPromptForWindowsCredentialsW, CREDUIWIN_ENUMERATE_CURRENT_USER, CREDUIWIN_GENERIC,
-        CREDUI_INFOW,
+        CREDUI_INFOW, CREDUIWIN_ENUMERATE_CURRENT_USER, CREDUIWIN_GENERIC,
+        CredUIPromptForWindowsCredentialsW,
     },
+    core::PCWSTR,
 };
 
 #[cfg(target_os = "windows")]
@@ -36,14 +37,14 @@ pub async fn authenticate() -> Result<bool, String> {
         // Вызываем функцию
         let result = CredUIPromptForWindowsCredentialsW(
             Some(&ui_info),
-                                                        0,
-                                                        &mut auth_package,
-                                                        None,
-                                                        0,
-                                                        &mut credential_buffer,
-                                                        &mut credential_buffer_size,
-                                                        Some(&mut save),
-                                                        flags,
+            0,
+            &mut auth_package,
+            None,
+            0,
+            &mut credential_buffer,
+            &mut credential_buffer_size,
+            Some(&mut save),
+            flags,
         );
 
         if result == ERROR_SUCCESS.0 {
@@ -54,7 +55,6 @@ pub async fn authenticate() -> Result<bool, String> {
         }
     }
 }
-
 
 // Linux версия остается без изменений, она корректна
 #[cfg(target_os = "linux")]
@@ -69,10 +69,10 @@ pub async fn authenticate() -> Result<bool, String> {
     "#;
 
     let output = Command::new("bash")
-    .arg("-c")
-    .arg(script)
-    .output()
-    .map_err(|e| e.to_string())?;
+        .arg("-c")
+        .arg(script)
+        .output()
+        .map_err(|e| e.to_string())?;
 
     Ok(output.status.success())
 }
