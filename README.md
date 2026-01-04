@@ -109,7 +109,7 @@ bun tauri build --runner cargo-xwin --target x86_64-pc-windows-gnu
 ### Backend:
 - **Tauri 2** — фреймворк для настольных приложений
 - **SQLite** — локальная база данных
-- **Rusqlite** — драйвер SQLite для Rust
+- **SeaORM** — для асинхронной работы с базой данных 
 - **AES-GCM** — криптографические алгоритмы
 
 ### Инструменты сборки:
